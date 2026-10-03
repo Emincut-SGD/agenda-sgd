@@ -1,4 +1,4 @@
-// CONFIGURACIÓN DE FIREBASE (Reemplaza con tus llaves copiadas de la consola)
+// CONFIGURACIÓN DE FIREBASE (Conserva tus claves reales de Firebase)
   const firebaseConfig = {
     apiKey: "AIzaSyB0T2RY--VY_Fvs2e7kCWNvdeBX8ozHxtc",
     authDomain: "agenda-sgd.firebaseapp.com",
@@ -57,18 +57,30 @@ if (document.getElementById('weeklyGrid')) {
       col.className = 'day-column';
       col.innerHTML = `<div class="day-header">${day.name}</div>`;
 
+      // REGLA ESPECIAL: BLOQUEO DEL LUNES COMPLETO
+      const isMonday = (day.date === "2026-10-05");
+
       timeSlots.forEach(time => {
         const key = `${day.date}_${time}`;
         const slotEl = document.createElement('div');
         const booking = bookedMap[key];
 
-        if (booking) {
+        if (isMonday) {
+          // Lunes bloqueado por planeación SGD
+          slotEl.className = 'time-slot occupied';
+          slotEl.innerHTML = `
+            <span class="slot-time">${time}</span>
+            <span class="slot-owner">Ocupado - SGD (Planeación de acompañamientos)</span>
+          `;
+        } else if (booking) {
+          // Bloques ocupados por reservas de líderes
           slotEl.className = 'time-slot occupied';
           slotEl.innerHTML = `
             <span class="slot-time">${time}</span>
             <span class="slot-owner">Ocupado - ${booking.area}</span>
           `;
         } else {
+          // Bloques disponibles
           const isSelected = selectedSlotData && selectedSlotData.date === day.date && selectedSlotData.time === time;
           slotEl.className = `time-slot available ${isSelected ? 'selected' : ''}`;
           slotEl.innerHTML = `
@@ -160,7 +172,7 @@ if (document.getElementById('weeklyGrid')) {
 // ==========================================
 // VISTA PANEL ADMIN (ADMIN.HTML)
 // ==========================================
-const ADMIN_PASSWORD = "Maxi2703"; // Puedes cambiar esta contraseña por la que prefieras
+const ADMIN_PASSWORD = "admin123sgd"; // Contraseña del panel privado
 
 function loginAdmin() {
   const pass = document.getElementById('adminPassword').value;
@@ -196,7 +208,7 @@ function loadAdminData() {
       const isCompleted = item.status === 'completed';
       const isCancelled = item.status === 'cancelled';
 
-      if (isCancelled) return; // No mostrar cancelados o mostrarlos si se prefiere
+      if (isCancelled) return;
 
       tr.innerHTML = `
         <td>${item.dayName || item.date}</td>
