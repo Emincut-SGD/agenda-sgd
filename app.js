@@ -172,7 +172,7 @@ if (document.getElementById('weeklyGrid')) {
 // ==========================================
 // VISTA PANEL ADMIN (ADMIN.HTML)
 // ==========================================
-const ADMIN_PASSWORD = "admin123sgd"; // Contraseña del panel privado
+const ADMIN_PASSWORD = "Maxi2703"; // Contraseña del panel privado
 
 function loginAdmin() {
   const pass = document.getElementById('adminPassword').value;
